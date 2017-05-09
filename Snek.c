@@ -1,4 +1,5 @@
 #include "Snek.h"
+#include "render.c"
 
 void moveSnek(Snek * s){
     /* For each segement of Snek, segment
@@ -7,20 +8,16 @@ void moveSnek(Snek * s){
     do { 
        switch(s->dir){ 
             case 'r':
-                Point p = *s->pos;
-                p.x++;
+                s->pos.x ++;
                 break;
             case 'l':
-                Point p = *s->pos;
-                p.x--;
+                s->pos.x --;
                 break;
             case 'u':
-                Point p = *s->pos;
-                p.y--;
+                s->pos.y --;
                 break;
             case 'd':
-                Point p = *s->pos;
-                p.y++;
+                s->pos.y ++;
                 break;
             default:
                 // Snek is malformed. 
@@ -30,10 +27,10 @@ void moveSnek(Snek * s){
 }
 
 void checkCollision(Snek * s, Point p){
-
-
+    
 }
 
 void addSegment(Snek * s){
-
+    for (; (s = s->body) != NULL; )
+        ;
 }
