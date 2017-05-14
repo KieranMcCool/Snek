@@ -1,5 +1,4 @@
 #include "Snek.h"
-#include "render.c"
 
 void moveSnek(Snek * s){
     /* For each segement of Snek, segment
@@ -27,7 +26,7 @@ void moveSnek(Snek * s){
 }
 
 void checkCollision(Snek * s, Point p){
-    
+    printf("%c%d\n", s->dir, p.x);
 }
 
 void addSegment(Snek * s){
