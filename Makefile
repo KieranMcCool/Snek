@@ -5,4 +5,4 @@ all:
 	$(CC) -o test.o $(CFLAGS) render.c
 
 clean:
-	rm *.ok
+	rm *.o
