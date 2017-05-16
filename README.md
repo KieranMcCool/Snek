@@ -7,7 +7,7 @@ Snek is a revolutionary, immersive gaming experience. It is redefining the
 standard of cutting edge graphics and gameplay and bringing a new and exciting 
 genre to the mainstream.
 
-##How does it work?
+## How does it work?
 
 [This probably explains it better than I could in the off chance you've never 
 played Snake 
