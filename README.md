@@ -1,6 +1,6 @@
 # What is Snek?
 
-~~Snek is a Snake clone written in C in an effort to get myself more 
+\~~Snek is a Snake clone written in C in an effort to get myself more 
 comfortable with C programming.~~
 
 Snek is a revolutionary, immersive gaming experience. It is redefining the 
