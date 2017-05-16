@@ -4,12 +4,16 @@
 #include<SDL_ttf.h>
 #include<stdbool.h>
 #include "Snek.c"
+#include<unistd.h>
 
 #define WIDTH 640
-#define HEIGHT 480
+#define HEIGHT 640
 #define PAD  40
 
 #define CELLS 40 
+
+int ErrorNo;
+enum Errors { GAMEBOARD_ERROR, SNEKRENDER_ERROR, SCORERENDER_ERROR, SDL_ERROR};
 
 int drawGameBoard(SDL_Renderer *r){
 
@@ -20,14 +24,27 @@ int drawGameBoard(SDL_Renderer *r){
     int xLine = (WIDTH - 2 * PAD) / CELLS;
     int yLine = (HEIGHT - 2 * PAD) / CELLS;
 
-//    for (int x = PAD; x < WIDTH - PAD; x += xLine)
-//        SDL_RenderDrawLine(r, x, PAD, x, HEIGHT - PAD);
-//    for (int y = PAD; y < HEIGHT - PAD; y += yLine)
-//        SDL_RenderDrawLine(r, PAD, y, WIDTH - PAD, y);
+    for (int x = PAD; x < WIDTH - PAD; x += xLine)
+        SDL_RenderDrawLine(r, x, PAD, x, HEIGHT - PAD);
+    for (int y = PAD; y < HEIGHT - PAD; y += yLine)
+        SDL_RenderDrawLine(r, PAD, y, WIDTH - PAD, y);
     SDL_RenderDrawRect(r, &outline);
-    return 1;
+    return 0;
 }
 
+int drawFood(SDL_Renderer *r, Point *foodpos){
+    int xLine = (WIDTH - 2 * PAD) / CELLS;
+    int yLine = (HEIGHT - 2 * PAD) / CELLS;
+
+    SDL_Rect food;
+    food.x = xLine * foodpos->x + PAD;
+    food.w = xLine;
+    food.y = yLine * foodpos->y  + PAD;
+        food.h = yLine;
+
+    SDL_RenderFillRect(r, &food);
+    return 0;
+}
 int drawSnek(SDL_Renderer *r, Snek *s){
     int width = (WIDTH - 2 * PAD) / CELLS;
     int height = (HEIGHT - 2 * PAD) / CELLS;
@@ -42,8 +59,8 @@ int drawSnek(SDL_Renderer *r, Snek *s){
             SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
         count++;
         printf("\tSegment: (%d, %d)\n", s->pos.x, s->pos.y);
-        segment.x = s->pos.x * width;
-        segment.y = s->pos.y * height;
+        segment.x = s->pos.x * width + PAD;
+        segment.y = s->pos.y * height + PAD;
         segment.w = width;
         segment.h = height;
         printf("\tTranslated Points: (%d, %d)\n", segment.x, segment.y);
@@ -83,56 +100,33 @@ int drawScore(SDL_Renderer *r, int score){
     return 0;
 }
 
-int drawGameState(SDL_Renderer *r, Snek *s, int score){
+int drawGameState(SDL_Renderer *r, Snek *s, Point food, int score){
+    if(drawGameBoard(r) < 0) {
+        ErrorNo = GAMEBOARD_ERROR;
+        return -1;
+    }
+    if(drawSnek(r, s) < 0) {
+       ErrorNo = SNEKRENDER_ERROR;
+       return -1;
+    }
+    if(drawScore(r, score) < 0){
+        ErrorNo = SCORERENDER_ERROR;
+        return -1;
+    }
 
-    drawGameBoard(r);
-    drawSnek(r, s);
-    drawScore(r, score);
     SDL_RenderPresent(r);
     return 0;
 }
 
-Snek *  getSnek(){
-    Snek * head;
-    Snek * new;
-    Point * position;
-
-    Snek * last = NULL;
-    Point * lastp;
-
-    int x = 15; int y = 20;
-
-    for(int i = 0; i < 10; i++){
-        new = malloc(sizeof(Snek));
-        position = malloc(sizeof(Point));
-
-        position->x = x + i; position->y = y;
-
-        new->pos = *position;
-        new->body = NULL;
-        new->dir = 'r';
-
-        if(last != NULL){
-            last->body = new;
-        } else if(i == 0){
-            head = new;
-        }
-
-        last = new;
-    }
-    
-    return head;
-}
-
 int main(){
-    Snek *s = getSnek();
+    Snek *s = Snek_getSnek(5, 20, 20, 'd');
     if (SDL_Init(SDL_INIT_VIDEO) != 0){
         return 1;
     }
     if(TTF_Init() != 0){ 
         return 1;
     }
-    SDL_Window *win = SDL_CreateWindow("Snek - Kieran McCool", 100, 100, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window *win = SDL_CreateWindow("Snek", 100, 100, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     if (win == NULL){
         SDL_Quit();
         return 1;
@@ -158,6 +152,6 @@ int main(){
                 quit = true;
             }
         }
-        drawGameState(ren, s, 0);
+        drawGameState(ren, s, 3);
     }
 }
