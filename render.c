@@ -17,6 +17,10 @@ enum Errors { GAMEBOARD_ERROR, SNEKRENDER_ERROR, SCORERENDER_ERROR, SDL_ERROR};
 
 int drawGameBoard(SDL_Renderer *r){
 
+    SDL_Rect back;
+    back.x = 0; back.y = 0;
+    back.h = HEIGHT; back.w = WIDTH;
+
     SDL_Rect outline;
     outline.x = PAD; outline.y = PAD;
     outline.w = WIDTH - (2 * PAD); outline.h = HEIGHT - (2 * PAD);
@@ -24,10 +28,16 @@ int drawGameBoard(SDL_Renderer *r){
     int xLine = (WIDTH - 2 * PAD) / CELLS;
     int yLine = (HEIGHT - 2 * PAD) / CELLS;
 
-    for (int x = PAD; x < WIDTH - PAD; x += xLine)
+    SDL_SetRenderDrawColor(r, 0, 0, 0, 0);
+    SDL_RenderFillRect(r, &back);
+    SDL_SetRenderDrawColor(r, 255, 255, 255, 0);
+
+  /*for (int x = PAD; x < WIDTH - PAD; x += xLine)
         SDL_RenderDrawLine(r, x, PAD, x, HEIGHT - PAD);
     for (int y = PAD; y < HEIGHT - PAD; y += yLine)
-        SDL_RenderDrawLine(r, PAD, y, WIDTH - PAD, y);
+        SDL_RenderDrawLine(r, PAD, y, WIDTH - PAD, y); */
+
+
     SDL_RenderDrawRect(r, &outline);
     return 0;
 }
@@ -70,6 +80,7 @@ int drawSnek(SDL_Renderer *r, Snek *s){
     } while ( (s = s->body) != NULL);
 
     SDL_SetRenderDrawColor(r, 255,255,255,255);
+
     return 0;
 }
 
@@ -100,7 +111,7 @@ int drawScore(SDL_Renderer *r, int score){
     return 0;
 }
 
-int drawGameState(SDL_Renderer *r, Snek *s, Point food, int score){
+int drawGameState(SDL_Renderer *r, Snek *s, Point *food, int score){
     if(drawGameBoard(r) < 0) {
         ErrorNo = GAMEBOARD_ERROR;
         return -1;
@@ -114,12 +125,14 @@ int drawGameState(SDL_Renderer *r, Snek *s, Point food, int score){
         return -1;
     }
 
+    drawFood(r, food);
     SDL_RenderPresent(r);
+
     return 0;
 }
 
 int main(){
-    Snek *s = Snek_getSnek(5, 20, 20, 'd');
+    Snek *s = Snek_getSnek(5, 20, 20, 'r');
     if (SDL_Init(SDL_INIT_VIDEO) != 0){
         return 1;
     }
@@ -146,12 +159,15 @@ int main(){
                 quit = true;
             }
             if (e.type == SDL_KEYDOWN){
-                 quit = true;
+                switch (e.key.keysym.sym){
+                    default:
+                        break;
+                }
             }
-            if (e.type == SDL_MOUSEBUTTONDOWN){
-                quit = true;
-            }
-        }
-        drawGameState(ren, s, 3);
+       }
+        Point Food = { 10, 16 };
+        drawGameState(ren, s, &Food, 3);
+        Snek_moveSnek(&s);
+        sleep(1);
     }
 }

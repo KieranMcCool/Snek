@@ -14,4 +14,6 @@ void moveSnek(Snek * s);
 
 void checkCollision(Snek  * s, Point p);
 
-void addSegment(Snek * s);
+void Snek_AddBack(Snek * s);
+void Snek_AddFront(Snek ** s);
+void Snek_RemoveBack(Snek * s);

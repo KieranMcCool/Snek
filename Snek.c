@@ -15,16 +15,16 @@ Snek_getSnek(int len, int x, int y, char dir){
         
         switch (dir){
             case 'r':
-                position->x = x + i; position->y = y;
-                break;
-            case 'l':
                 position->x = x - i; position->y = y;
                 break;
+            case 'l':
+                position->x = x + i; position->y = y;
+                break;
             case 'u':
-                position->x = x; position->y = y - i;
+                position->x = x; position->y = y + i;
                 break;
             case 'd':
-                position->x = x; position->y = y + i;
+                position->x = x; position->y = y - i;
                 break;
         }
 
@@ -45,47 +45,71 @@ Snek_getSnek(int len, int x, int y, char dir){
 }
 
 void Snek_freeSnek(Snek * s){
-    if(s->body != NULL)
-        Snek_freeSnek(s->body);
-    free(&(s->pos));
-    free(&(s->dir));
-    free(s);
 }
 
-void Snek_moveSnek(Snek * s){
-    
+void Snek_moveSnek(Snek ** s){
+    Snek_AddFront(s);
+    Snek_RemoveBack(*s);
 }
 
-void Snek_addSegment(Snek * s){
-    while(s->body != NULL)
-        s = s->body;
+void Snek_AddFront(Snek ** s){
+   
+    Snek * oldHead = *s;
+    Snek * newHead;
 
-    puts("Loop exited");
-    Snek * add = malloc(sizeof(Snek));
-    Point * p = malloc(sizeof(Point));
-
-    add->dir = s->dir; 
-    p->x = s->pos.x;
-    p->y = s->pos.y;
-
-    switch(s->dir){ 
+    switch(oldHead->dir){
         case 'r':
-            p->x++;                 
+            puts("r");
+            newHead = Snek_getSnek(1, oldHead->pos.x + 1, oldHead->pos.y, oldHead->dir);
             break;
         case 'l':
-            p->x--;
+            puts("l");
+            newHead = Snek_getSnek(1, oldHead->pos.x - 1, oldHead->pos.y, oldHead->dir);
             break;
         case 'u':
-            p->y--;
+            puts("u");
+            newHead = Snek_getSnek(1, oldHead->pos.x, oldHead->pos.y - 1, oldHead->dir);
             break;
         case 'd':
-            p->y++;
-            break;
-        default:
+            puts("d");
+            newHead = Snek_getSnek(1, oldHead->pos.x + 1, oldHead->pos.y + 1, oldHead->dir);
             break;
     }
 
-    add->pos = *p;
-    add->body = NULL;
-    s->body = add;
+    newHead->body = oldHead;
+    *s = newHead;
+}
+
+void Snek_AddBack(Snek * s){
+    while(s->body != NULL){
+        s = s->body;
+    }
+    
+    switch(s->dir){
+        case 'r':
+            s->body = Snek_getSnek(1, s->pos.x - 1, s->pos.y, s->dir);
+            break;
+        case 'l':
+            s->body = Snek_getSnek(1, s->pos.x + 1, s->pos.y, s->dir);
+            break;
+        case 'u':
+            s->body = Snek_getSnek(1, s->pos.x, s->pos.y + 1, s->dir);
+            break;
+        case 'd':
+            s->body = Snek_getSnek(1, s->pos.x, s->pos.y -1, s->dir);
+            break;
+    }
+}
+
+void Snek_RemoveBack(Snek * s){
+    if ( s->body == NULL) return;
+    
+    while(1){
+        // If next is last.
+        if(s->body->body == NULL){
+            Snek_freeSnek(s->body);
+            s->body = NULL;
+            break;
+        } else { s = s->body; } 
+    }
 }
