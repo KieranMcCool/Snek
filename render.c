@@ -131,43 +131,70 @@ int drawGameState(SDL_Renderer *r, Snek *s, Point *food, int score){
     return 0;
 }
 
-int main(){
-    Snek *s = Snek_getSnek(5, 20, 20, 'r');
+SDL_Renderer * initialiseRenderere(){
     if (SDL_Init(SDL_INIT_VIDEO) != 0){
-        return 1;
+        return NULL;
     }
     if(TTF_Init() != 0){ 
-        return 1;
+        return NULL;
     }
     SDL_Window *win = SDL_CreateWindow("Snek", 100, 100, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     if (win == NULL){
         SDL_Quit();
-        return 1;
+        return NULL;
     }
     SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == NULL){
         SDL_DestroyWindow(win);
         SDL_Quit();
-        return 1;
+        return NULL;
     }
+    return ren;
+}
 
+int main(){
+    Snek *s = Snek_getSnek(5, 20, 20, 'r');
+    char c = 'r';
+    SDL_Renderer *ren = initialiseRenderere();
     SDL_Event  e;
+    bool keyRec = false;
     bool quit = false;
     while (!quit){
         while (SDL_PollEvent(&e)){
             if (e.type == SDL_QUIT){
                 quit = true;
             }
-            if (e.type == SDL_KEYDOWN){
+            else if (e.type == SDL_KEYDOWN){
+                keyRec = true;
                 switch (e.key.keysym.sym){
+                    case 'w':
+                        if (c != 'd'){
+                            c = 'u';
+                        }
+                        break;
+                    case 's':
+                        if (c != 'u'){
+                            c = 'd';
+                        }
+                        break;
+                    case 'a':
+                        if (c != 'r'){
+                            c = 'l';
+                        }
+                        break;
+                    case 'd':
+                        if (c != 'l'){
+                            c = 'r';
+                        }
+                        break;
                     default:
                         break;
                 }
             }
        }
-        Point Food = { 10, 16 };
-        drawGameState(ren, s, &Food, 3);
-        Snek_moveSnek(&s);
-        sleep(1);
+       Point Food = { 10, 16 };
+       s->dir = c;
+       Snek_moveSnek(&s);
+       drawGameState(ren, s, &Food, 3);
     }
 }

@@ -59,20 +59,16 @@ void Snek_AddFront(Snek ** s){
 
     switch(oldHead->dir){
         case 'r':
-            puts("r");
             newHead = Snek_getSnek(1, oldHead->pos.x + 1, oldHead->pos.y, oldHead->dir);
             break;
         case 'l':
-            puts("l");
             newHead = Snek_getSnek(1, oldHead->pos.x - 1, oldHead->pos.y, oldHead->dir);
             break;
         case 'u':
-            puts("u");
             newHead = Snek_getSnek(1, oldHead->pos.x, oldHead->pos.y - 1, oldHead->dir);
             break;
         case 'd':
-            puts("d");
-            newHead = Snek_getSnek(1, oldHead->pos.x + 1, oldHead->pos.y + 1, oldHead->dir);
+            newHead = Snek_getSnek(1, oldHead->pos.x, oldHead->pos.y + 1, oldHead->dir);
             break;
     }
 
