@@ -21,4 +21,6 @@ the representation and manipulation of the Snek struct.
 
 ## Compilation
 
-Can be compiled with `gcc -o Snek game.c` and run with `./Snek`
+Can be compiled with 
+`gcc \`sdl2-config --cflags --libs\` -lSDL2_ttf -o Snek game.c` and run with 
+`./Snek` assuming you have both SDL2 and SDL2-TTF installed on your system.
