@@ -10,10 +10,9 @@ struct point { int x; int y;};
  * a body expressed as another snek. */
 struct snek { Point pos; char dir;  Snek * body;};
 
-void moveSnek(Snek * s);
+void moveSnek(Snek ** s, char dir);
 
 void checkCollision(Snek  * s, Point p);
-
 void Snek_AddBack(Snek * s);
-void Snek_AddFront(Snek ** s);
+void Snek_AddFront(Snek ** s, char dir);
 void Snek_RemoveBack(Snek * s);

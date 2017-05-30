@@ -47,28 +47,28 @@ Snek_getSnek(int len, int x, int y, char dir){
 void Snek_freeSnek(Snek * s){
 }
 
-void Snek_moveSnek(Snek ** s){
-    Snek_AddFront(s);
+void Snek_moveSnek(Snek ** s, char dir){
+    Snek_AddFront(s, dir);
     Snek_RemoveBack(*s);
 }
 
-void Snek_AddFront(Snek ** s){
+void Snek_AddFront(Snek ** s, char dir){
    
     Snek * oldHead = *s;
     Snek * newHead;
 
-    switch(oldHead->dir){
+    switch(dir){
         case 'r':
-            newHead = Snek_getSnek(1, oldHead->pos.x + 1, oldHead->pos.y, oldHead->dir);
+            newHead = Snek_getSnek(1, oldHead->pos.x + 1, oldHead->pos.y, dir);
             break;
         case 'l':
-            newHead = Snek_getSnek(1, oldHead->pos.x - 1, oldHead->pos.y, oldHead->dir);
+            newHead = Snek_getSnek(1, oldHead->pos.x - 1, oldHead->pos.y, dir);
             break;
         case 'u':
-            newHead = Snek_getSnek(1, oldHead->pos.x, oldHead->pos.y - 1, oldHead->dir);
+            newHead = Snek_getSnek(1, oldHead->pos.x, oldHead->pos.y - 1, dir);
             break;
         case 'd':
-            newHead = Snek_getSnek(1, oldHead->pos.x, oldHead->pos.y + 1, oldHead->dir);
+            newHead = Snek_getSnek(1, oldHead->pos.x, oldHead->pos.y + 1, dir);
             break;
     }
 

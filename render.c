@@ -1,9 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<stdbool.h>
 #include<SDL.h>
 #include<SDL_ttf.h>
-#include<stdbool.h>
-#include "Snek.c"
 #include<unistd.h>
 
 #define WIDTH 640
@@ -36,7 +35,6 @@ int drawGameBoard(SDL_Renderer *r){
         SDL_RenderDrawLine(r, x, PAD, x, HEIGHT - PAD);
     for (int y = PAD; y < HEIGHT - PAD; y += yLine)
         SDL_RenderDrawLine(r, PAD, y, WIDTH - PAD, y); */
-
 
     SDL_RenderDrawRect(r, &outline);
     return 0;
@@ -150,51 +148,4 @@ SDL_Renderer * initialiseRenderere(){
         return NULL;
     }
     return ren;
-}
-
-int main(){
-    Snek *s = Snek_getSnek(5, 20, 20, 'r');
-    char c = 'r';
-    SDL_Renderer *ren = initialiseRenderere();
-    SDL_Event  e;
-    bool keyRec = false;
-    bool quit = false;
-    while (!quit){
-        while (SDL_PollEvent(&e)){
-            if (e.type == SDL_QUIT){
-                quit = true;
-            }
-            else if (e.type == SDL_KEYDOWN){
-                keyRec = true;
-                switch (e.key.keysym.sym){
-                    case 'w':
-                        if (c != 'd'){
-                            c = 'u';
-                        }
-                        break;
-                    case 's':
-                        if (c != 'u'){
-                            c = 'd';
-                        }
-                        break;
-                    case 'a':
-                        if (c != 'r'){
-                            c = 'l';
-                        }
-                        break;
-                    case 'd':
-                        if (c != 'l'){
-                            c = 'r';
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-       }
-       Point Food = { 10, 16 };
-       s->dir = c;
-       Snek_moveSnek(&s);
-       drawGameState(ren, s, &Food, 3);
-    }
 }
