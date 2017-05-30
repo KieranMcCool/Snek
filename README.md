@@ -21,8 +21,4 @@ the representation and manipulation of the Snek struct.
 
 ## Compilation
 
-Can be compiled with:
-
-```
-gcc -o Snek render.c
-```
+Can be compiled with `gcc -o Snek game.c` and run with `./Snek`
