@@ -2,7 +2,7 @@ CC=clang
 CFLAGS=`sdl2-config --cflags --libs` -lSDL2_ttf -W 
 
 all:
-	$(CC) -o test.o $(CFLAGS) game.c
+	$(CC) -o Snek $(CFLAGS) game.c
 
 clean:
 	rm *.o
