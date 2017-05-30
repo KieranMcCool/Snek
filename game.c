@@ -20,12 +20,24 @@ void game_checkfood(Gamestate *g){
 }
 
 void game_checkcollision(Gamestate *g){
-    Snek *s = g->s;
+    Snek *s = g->s->body;
+    Point head = g->s->pos;
+
+    // Outsite bounds
+    if (head.x >= CELLS ||  head.y >= CELLS ||  
+            head.x <= 0 || head.y <= 0)
+        g->playing = false;
+    
+    // Snek too small to collide with self.
+    if (s == NULL) return;
+
+    // For each body segment, check collision.
     do {
-        Point head = g->s->pos;
         if ( s->pos.x == head.x && 
                 s->pos.y == head.y) {
-            puts("collision");
+            // collision
+            g->playing = false;
+            return;
         }
     } while ((s = s->body) != NULL);
 }
@@ -72,7 +84,7 @@ void processEvent(Gamestate *g, SDL_Renderer *ren){
 
     game_tick(g); 
     drawGameState(ren, g->s, g->food, g->score);
-    if(g->eventRec == false) usleep(750 * 1000);
+    if(g->eventRec == false) usleep(400 * 1000);
     else g->eventRec = false;
 }
 
