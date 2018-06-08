@@ -37,17 +37,17 @@ void game_checkcollision(Gamestate *g){
 
     s = g->s; 
     do {
-        if ( s->pos.x >= CELLS && g->dir == 'r') s->pos.x = 1;
-        else if (s->pos.x <= 0 && g->dir == 'l') s->pos.x = CELLS - 1;
-        if ( s->pos.y >= CELLS && g->dir == 'd') s->pos.y = 1;
-        else if (s->pos.y <= 0 && g->dir == 'u') s->pos.y = CELLS -1;
+        if ( s->pos.x >= CELLS && g->dir == 'r') s->pos.x = 0;
+        else if (s->pos.x < 0 && g->dir == 'l') s->pos.x = CELLS - 1;
+        if ( s->pos.y >= CELLS && g->dir == 'd') s->pos.y = 0;
+        else if (s->pos.y < 0 && g->dir == 'u') s->pos.y = CELLS -1;
     } while ((s = s->body) != NULL);
 }
 
 void game_tick(Gamestate *g){
     game_checkfood(g);
-    game_checkcollision(g);
     Snek_moveSnek(&g->s, g->dir);
+    game_checkcollision(g);
 }
 
 int randR(int min, int max){
